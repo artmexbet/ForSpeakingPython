@@ -10,7 +10,7 @@ def add_link():
     """
     Добавляет ссылку в базу данных
     """
-    form = request.form
+    form = request.json
     if form.get("link", False):
         link = links.Link(link=form.get("link"))
         sess = db_session.create_session()
