@@ -7,6 +7,9 @@ app = Flask(__name__)
 
 @app.route("/link/add", methods=["POST"])
 def add_link():
+    """
+    Добавляет ссылку в базу данных
+    """
     form = request.form
     if form.get("link", False):
         link = links.Link(link=form.get("link"))
@@ -19,6 +22,10 @@ def add_link():
 
 @app.route("/link/<identifier>")
 def get_link(identifier):
+    """
+    Перебрасывает на страницу из базы данных, если таковая имеется.
+    Если же нет, возвращает ошибку NotFound
+    """
     sess = db_session.create_session()
     try:
         link = sess.query(links.Link).get(int(identifier))
@@ -30,6 +37,9 @@ def get_link(identifier):
 
 @app.route("/link/<identifier>/delete")
 def delete_link(identifier):
+    """
+    Удаляет ссылку из базы данных, если таковая имеется. Иначе возвращает ошибку NotFound
+    """
     sess = db_session.create_session()
     try:
         link = sess.query(links.Link).get(int(identifier))
@@ -37,7 +47,7 @@ def delete_link(identifier):
         return {"verdict": 1}
     except Exception as ex:
         print(ex)
-        return abort(400)
+        return abort(404)
 
 
 if __name__ == "__main__":
